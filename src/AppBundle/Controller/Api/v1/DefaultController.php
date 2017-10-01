@@ -30,7 +30,7 @@ class DefaultController extends Controller {
 	 */
 	public function jsonResponse($response) {
 		// Json encoded response
-		$json_response = json_decode($response);
+		$json_response = json_encode($response);
 
 		// Returns response
 		return new Response($json_response);

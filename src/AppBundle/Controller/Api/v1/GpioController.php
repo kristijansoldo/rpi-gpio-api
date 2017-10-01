@@ -34,8 +34,12 @@ class GpioController extends DefaultController {
 	 * @return \Symfony\Component\HttpFoundation\Response
 	 */
 	public function postAction($pin, Request $request) {
+		// Get pin value
+		$value = $request->query->get('value');
+		// Creates data
+		$data = ['value' => $value, 'pin' => $pin];
 		// Returns
-		return $this->jsonResponse($pin);
+		return $this->jsonResponse($data);
 	}
 
 	/**
