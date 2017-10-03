@@ -48,11 +48,7 @@ class GpioController extends DefaultController {
 		$gpioPin = $gpio->getOutputPin( $pin );
 		// Set the value of the pin high (turn it on)
 		$gpioPin->setValue( $value );
-		// Get value
-		$data = $gpioPin->getValue();
 
-		// Returns
-		return $this->jsonResponse( $data );
 	}
 
 	/**
