@@ -44,22 +44,15 @@ class GpioController extends DefaultController {
 		$pin = intval( $pin );
 		// Create a GPIO object
 		$gpio = new GPIO();
-		// Try/catch
-		try {
-			// Retrieve $pin and configure it as an output pin
-			$pin = $gpio->getOutputPin( $pin );
-			// Set the value of the pin high (turn it on)
-			$pin->setValue( $value );
-			// Get value
-			$data = $pin->getValue();
+		// Retrieve $pin and configure it as an output pin
+		$gpioPin = $gpio->getOutputPin( $pin );
+		// Set the value of the pin high (turn it on)
+		$gpioPin->setValue( $value );
+		// Get value
+		$data = $gpioPin->getValue();
 
-			// Returns
-			return $this->jsonResponse( $data );
-		} catch ( Exception $exception ) {
-
-			// Returns exception
-			return $this->jsonResponse( $exception );
-		}
+		// Returns
+		return $this->jsonResponse( $data );
 	}
 
 	/**
@@ -75,23 +68,15 @@ class GpioController extends DefaultController {
 		$pin = intval( $pin );
 		// Create a GPIO object
 		$gpio = new GPIO();
-		
-		// Try/catch
-		try {
-			// Retrieve $pin and configure it as an input pin
-			$pin = $gpio->getInputPin( $pin );
-			// Configure interrupts for both rising and falling edges
-			$pin->setEdge( InputPinInterface::EDGE_BOTH );
-			// Sets data
-			$data = $pin->getValue();
+		// Retrieve $pin and configure it as an input pin
+		$gpioPin = $gpio->getInputPin( $pin );
+		// Configure interrupts for both rising and falling edges
+		$gpioPin->setEdge( InputPinInterface::EDGE_BOTH );
+		// Sets data
+		$data = $gpioPin->getValue();
 
-			// Returns
-			return $this->jsonResponse( $data );
-
-		} catch ( Exception $exception ) {
-			// Returns
-			return $this->jsonResponse( $exception );
-		}
+		// Returns
+		return $this->jsonResponse( $data );
 	}
 
 }
