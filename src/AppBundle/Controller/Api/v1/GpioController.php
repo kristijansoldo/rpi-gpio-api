@@ -10,7 +10,6 @@ namespace AppBundle\Controller\Api\v1;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
 use PiPHP\GPIO\GPIO;
 use PiPHP\GPIO\Pin\InputPinInterface;
@@ -26,6 +25,17 @@ use PiPHP\GPIO\Pin\InputPinInterface;
  */
 class GpioController extends DefaultController {
 
+	/**
+	 * @var
+	 */
+	public $gpio;
+
+	/**
+	 * GpioController constructor.
+	 */
+	public function __construct() {
+		$this->gpio = new GPIO();
+	}
 
 	/**
 	 * @Route("/{pin}")
@@ -41,14 +51,11 @@ class GpioController extends DefaultController {
 		$value = intval( $request->query->get( 'value' ) );
 		// Parse to integer pin
 		$pin = intval( $pin );
-		// Create a GPIO object
-		$gpio = new GPIO();
 		// Retrieve $pin and configure it as an output pin
-		$gpioPin = $gpio->getOutputPin( $pin );
+		$gpioPin = $this->gpio->getOutputPin( $pin );
 		// Set the value of the pin high (turn it on)
 		$gpioPin->setValue( $value );
-
-
+		
 		// Returns
 		return $this->jsonResponse( ['value' => $value, 'pin' => $pin]);
 	}
@@ -64,10 +71,8 @@ class GpioController extends DefaultController {
 	public function getAction( $pin ) {
 		// Parse to integer pin
 		$pin = intval( $pin );
-		// Create a GPIO object
-		$gpio = new GPIO();
 		// Retrieve $pin and configure it as an input pin
-		$gpioPin = $gpio->getInputPin( $pin );
+		$gpioPin = $this->gpio->getInputPin( $pin );
 		// Configure interrupts for both rising and falling edges
 		$gpioPin->setEdge( InputPinInterface::EDGE_BOTH );
 		// Sets data
