@@ -10,7 +10,11 @@ namespace AppBundle\Controller\Api\v1;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
+use PiPHP\GPIO\GPIO;
+use PiPHP\GPIO\Pin\PinInterface;
+use PiPHP\GPIO\Pin\InputPinInterface;
 
 
 /**
@@ -33,13 +37,29 @@ class GpioController extends DefaultController {
 	 *
 	 * @return \Symfony\Component\HttpFoundation\Response
 	 */
-	public function postAction($pin, Request $request) {
+	public function postAction( $pin, Request $request ) {
 		// Get pin value
-		$value = $request->query->get('value');
-		// Creates data
-		$data = ['value' => $value, 'pin' => $pin];
-		// Returns
-		return $this->jsonResponse($data);
+		$value = intval( $request->query->get( 'value' ) );
+		// Parse to integer pin
+		$pin = intval( $pin );
+		// Create a GPIO object
+		$gpio = new GPIO();
+		// Try/catch
+		try {
+			// Retrieve $pin and configure it as an output pin
+			$pin = $gpio->getOutputPin( $pin );
+			// Set the value of the pin high (turn it on)
+			$pin->setValue( $value );
+			// Get value
+			$data = $pin->getValue();
+
+			// Returns
+			return $this->jsonResponse( $data );
+		} catch ( Exception $exception ) {
+
+			// Returns exception
+			return $this->jsonResponse( $exception );
+		}
 	}
 
 	/**
@@ -50,9 +70,28 @@ class GpioController extends DefaultController {
 	 *
 	 * @return \Symfony\Component\HttpFoundation\Response
 	 */
-	public function getAction($pin) {
-		// Returns
-		return $this->jsonResponse($pin);
+	public function getAction( $pin ) {
+		// Parse to integer pin
+		$pin = intval( $pin );
+		// Create a GPIO object
+		$gpio = new GPIO();
+		
+		// Try/catch
+		try {
+			// Retrieve $pin and configure it as an input pin
+			$pin = $gpio->getInputPin( $pin );
+			// Configure interrupts for both rising and falling edges
+			$pin->setEdge( InputPinInterface::EDGE_BOTH );
+			// Sets data
+			$data = $pin->getValue();
+
+			// Returns
+			return $this->jsonResponse( $data );
+
+		} catch ( Exception $exception ) {
+			// Returns
+			return $this->jsonResponse( $exception );
+		}
 	}
 
 }
