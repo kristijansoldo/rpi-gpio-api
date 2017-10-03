@@ -13,7 +13,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
 use PiPHP\GPIO\GPIO;
-use PiPHP\GPIO\Pin\PinInterface;
 use PiPHP\GPIO\Pin\InputPinInterface;
 
 
@@ -49,6 +48,9 @@ class GpioController extends DefaultController {
 		// Set the value of the pin high (turn it on)
 		$gpioPin->setValue( $value );
 
+
+		// Returns
+		return $this->jsonResponse( ['value' => $value, 'pin' => $pin]);
 	}
 
 	/**
