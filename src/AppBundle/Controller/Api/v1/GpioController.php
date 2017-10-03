@@ -52,9 +52,9 @@ class GpioController extends DefaultController {
 		// Parse to integer pin
 		$pin = intval( $pin );
 		// Retrieve $pin and configure it as an output pin
-		$gpioPin = $this->gpio->getOutputPin( 16 );
+		$gpioPin = $this->gpio->getOutputPin( $pin );
 		// Set the value of the pin high (turn it on)
-		$gpioPin->setValue( 1 );
+		$gpioPin->setValue( $value );
 
 		// Returns
 		return $this->jsonResponse( ['value' => $value, 'pin' => $pin]);
